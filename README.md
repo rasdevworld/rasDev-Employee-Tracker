@@ -35,8 +35,10 @@ THEN I am prompted to select an employee to update and their new role and this i
 MIT License - The License file is provided here : (./LICENSE)
 
 ## Screenshot
-
-
+![Alt text](<Assets/inquirer prompt.png>)
+![Alt text](<Assets/All departments.png>)
+![Alt text](<Assets/All roles.png>)
+![Alt text](<Assets/All employees.png>)
 
 ## Github Repository and Demo Link
 
@@ -44,9 +46,10 @@ Github Repository: https://github.com/rasdevworld/rasDev-Employee-Tracker
 
 Demo Links :
 
-
+https://app.screencastify.com/v2/manage/videos/X1Gdids384vfCXNjzuwS
 
 OR
 
+https://drive.google.com/file/d/1H-ZuV-iZvKySPvKMbVl72vacyaZdE4Ew/view
 
 

@@ -90,7 +90,7 @@ function addEmployee() {
                     type : "list",
                     message : "Who is your manager?",
                     name : "manager_id",
-                    choices : managerDataData
+                    choices : managerData
                 }
             ]).then(response => {
                 db.query(`INSERT INTO employee(first_name, last_name, role_id, manager_id) VALUES("${response.first_name}","${response.last_name}","${response.title}","${response.manager_id}")`, (err) => {
