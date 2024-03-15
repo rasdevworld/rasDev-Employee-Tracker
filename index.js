@@ -48,6 +48,7 @@ function menu() {
     })
 }
 
+// Displaying the all the employees 
 function viewAllEmployees() {
     db.query(`SELECT employee.id as id, employee.first_name, employee.last_name, title, name as department, salary, CONCAT(managerTable.first_name,' ',managerTable.last_name) as manager
     FROM employee
@@ -56,32 +57,142 @@ function viewAllEmployees() {
     LEFT JOIN department
     ON role.department_id = department.id
     LEFT JOIN employee as managerTable
-    ON employee.manager_id = managerTable.id;`, (err,data) => {
-        printTable(data)
+    ON employee.manager_id = managerTable.id;`, (err, employeeData) => {
+        printTable(employeeData)
         menu()
     })
 }
 
+// Adding a new employee into the 'employee' table
 function addEmployee() {
-
+    db.query(`SELECT id as value, title as name FROM role`,
+    (err, roleData) => {
+        db.query(`SELECT id as value, CONCAT(first_name,' ',last_name) as name FROM employee WHERE manager_id is NULL`,
+        (err, managerData) => {
+            inquirer.prompt([
+                {
+                    type : "input",
+                    message : "What is your first name?",
+                    name : "first_name"
+                },
+                {
+                    type : "input",
+                    message : "What is your last name?",
+                    name : "last_name"
+                },
+                {
+                    type : "list",
+                    message : "What is your title?",
+                    name : "title",
+                    choices : roleData
+                },
+                {
+                    type : "list",
+                    message : "Who is your manager?",
+                    name : "manager_id",
+                    choices : managerDataData
+                }
+            ]).then(response => {
+                db.query(`INSERT INTO employee(first_name, last_name, role_id, manager_id) VALUES("${response.first_name}","${response.last_name}","${response.title}","${response.manager_id}")`, (err) => {
+                    viewAllEmployees()
+                })
+            })
+        })
+    })
 }
 
+// Updating the role of the specified employee in the 'employee' table
 function updateEmployeeRole() {
-
+    db.query(`SELECT id as value, title as name FROM role`,
+    (err, roleData) => {
+        db.query(`SELECT id as value, CONCAT(first_name,' ',last_name) as name FROM employee`,
+        (err, employeeData) => {
+            inquirer.prompt([
+                {
+                    type : "list",
+                    message : "What is the new title for the employee?",
+                    name : "role_id",
+                    choices : roleData
+                },
+                {
+                    type : "list",
+                    message : "Which employee do you want to update his or her title?",
+                    name : "employee_id",
+                    choices : employeeData
+                }
+            ]).then(response => {
+                db.query(`UPDATE employee SET role_id="${response.role_id}" WHERE ID=${response.employee_id}`, (err) => {
+                    viewAllEmployees()
+                })
+            })
+        })
+    })
 }
 
+// Displaying all the roles in the 'role' table
 function viewAllRoles() {
-    
+    db.query(`SELECT role.id as id, title, name as department, salary
+    FROM role
+    LEFT JOIN department
+    ON role.department_id = department.id;`, (err, roleData) => {
+        printTable(roleData)
+        menu()
+    })
 }
 
+// Adding a new role into the 'role' table
 function addRole() {
-    
+    db.query(`SELECT id as value, name as name from department`, (err, departmentData) =>{
+        db.query(`SELECT id as value, title as name`, (err, roleData) => {
+            inquirer.prompt([
+                {
+                    type : "list",
+                    message : "Which department do you want to add new role?",
+                    name : "department_id",
+                    choices : departmentData
+                },
+                {
+                    type : "input",
+                    message : "What is the name of the new role?",
+                    name : "role_id"
+                },
+                {
+                    type : "input",
+                    message : "What is the salary for this role?",
+                    name : "salary"
+                }
+            ]).then(response => {
+                db.query(`INSERT INTO role(title, department_id, salary) VALUES("${response.role_id}",${response.department_id},${response.salary})`, (err) => {
+                    viewAllRoles()
+                })
+            })
+        })
+    } )
 }
 
+// Displaying all the departments in the 'department' table
 function viewAllDepartments() {
-    
+    db.query(`SELECT * FROM department;`, (err,departmentData) => {
+        printTable(departmentData)
+        menu()
+    })
 }
 
+// Adding a new department into the 'department' table
 function addDepartment() {
-    
+    db.query(`SELECT name FROM department`, (err, departmentData) => {
+        inquirer.prompt([
+            {
+                type : "input",
+                message : "What is the name of the department?",
+                name : "department_name"
+            },
+        ]).then(response => {
+            db.query(`INSERT INTO department(name) VALUES("${response.department_name}")`, (err) => {
+                viewAllDepartments()
+            })
+        })
+   
+    })
+       
 }
